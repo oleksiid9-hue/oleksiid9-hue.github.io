@@ -259,7 +259,13 @@ h1 em{font-style:normal;white-space:nowrap;color:var(--green);text-shadow:0 0 24
 .tl-tag{display:inline-block;color:var(--green);font-size:12px;letter-spacing:.12em;padding:3px 8px;border:1px solid rgba(57,255,122,.4)}
 .tl h3{font:700 22px/1.2 Unbounded,sans-serif;margin:10px 0 6px}
 .tl p{color:var(--mute);font-size:16px;max-width:52ch}
-@media (prefers-reduced-motion:reduce){.tl li{opacity:1;transform:none;transition:none}}
+.tl li.fin .tl-dot{transform:none;border-radius:50%;width:34px;height:34px;left:-49px;top:-3px;display:grid;place-items:center}
+.tl li.fin::before{content:"";position:absolute;left:-36px;top:34px;bottom:-10px;width:8px;background:var(--bg,#050806)}
+.tl li.fin .tl-dot::after{content:"";width:10px;height:17px;border:solid var(--bg,#050806);border-width:0 3px 3px 0;transform:translateY(-2px) rotate(45deg);opacity:0;transition:opacity .4s .5s}
+.tl li.fin.in .tl-dot::after{opacity:1}
+.tl li.fin.in .tl-dot{animation:finPulse 2s ease-out .8s infinite}
+@keyframes finPulse{0%{box-shadow:0 0 16px rgba(57,255,122,.7),0 0 0 0 rgba(57,255,122,.55)}100%{box-shadow:0 0 16px rgba(57,255,122,.7),0 0 0 18px rgba(57,255,122,0)}}
+@media (prefers-reduced-motion:reduce){.tl li{opacity:1;transform:none;transition:none}.tl li.fin.in .tl-dot{animation:none}}
 
 /* FAQ */
 .faq{max-width:860px;display:grid;gap:10px}
@@ -470,8 +476,11 @@ footer{padding:28px var(--edge);border-top:1px solid var(--line);display:flex;ju
     <ol class="tl">
       <li><span class="tl-dot"></span><span class="tl-tag mono">Старт</span><h3>Коротка розмова</h3><p>Розповідаєш про бізнес і клієнтів, надсилаєш фото й контакти.</p></li>
       <li><span class="tl-dot"></span><span class="tl-tag mono">Стиль</span><h3>Перший екран</h3><p>Показую 2–3 варіанти стилю, ти обираєш один.</p></li>
+      <li><span class="tl-dot"></span><span class="tl-tag mono">Дзвінок</span><h3>Обговорюємо перший екран</h3><p>Зідзвонюємось, ти кажеш, що подобається і що змінити.</p></li>
       <li><span class="tl-dot"></span><span class="tl-tag mono">Збірка</span><h3>Увесь сайт</h3><p>Збираю всі блоки й перевіряю на телефоні та комп'ютері.</p></li>
-      <li><span class="tl-dot"></span><span class="tl-tag mono">Запуск</span><h3>Сайт онлайн</h3><p>Викладаю сайт в інтернет і передаю тобі посилання.</p></li>
+      <li><span class="tl-dot"></span><span class="tl-tag mono">Узгодження</span><h3>Обговорюємо сайт разом</h3><p>Показую готовий сайт, збираємо всі правки одним списком і узгоджуємо.</p></li>
+      <li><span class="tl-dot"></span><span class="tl-tag mono">Фінал</span><h3>Фінальна версія</h3><p>Вношу правки й ще раз перевіряю кожен блок.</p></li>
+      <li class="fin"><span class="tl-dot"></span><span class="tl-tag mono">Запуск</span><h3>Сайт онлайн</h3><p>Викладаю сайт в інтернет і передаю тобі посилання.</p></li>
     </ol>
   </section>
 
