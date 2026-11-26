@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Олексій — сайти, AI-аватари та відео</title>
+<meta name="description" content="Дизайн сайтів під ключ, AI-аватари та відео для бізнесу. Портфоліо Олексія.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=JetBrains+Mono:wght@400;600&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050806; --bg2:#0b110d; --ink:#f2f5f2; --mute:#9aa79e;
+  --green:#39ff7a; --green-d:#1fc85a; --red:#ff3b4a; --line:rgba(57,255,122,.22);
+  --edge:max(20px,(100vw - 1240px)/2);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);color:var(--ink);font:400 16px/1.6 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.mono{font-family:"JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
+
+/* фон: тонка сітка + свічення */
+body{min-height:100svh;background:
+  radial-gradient(60% 50% at 75% 40%,rgba(57,255,122,.10),transparent 70%),
+  linear-gradient(rgba(57,255,122,.05) 1px,transparent 1px) 0 0/48px 48px,
+  linear-gradient(90deg,rgba(57,255,122,.05) 1px,transparent 1px) 0 0/48px 48px,
+  var(--bg)}
+
+/* шапка */
+header{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px var(--edge);border-bottom:1px solid var(--line);background:rgba(5,8,6,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:padding .25s}
+header.small{padding-top:12px;padding-bottom:12px}
+html{scroll-behavior:smooth}
+section[id]{scroll-margin-top:84px}
+.logo{font:800 18px/1 Unbounded,sans-serif;letter-spacing:.04em}
+.logo b{color:var(--green)}
+nav{display:flex;gap:28px}
+nav a{color:var(--mute);transition:color .2s;position:relative}
+nav a:hover,nav a.on{color:var(--green)}
+nav a.on::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:2px;background:var(--green);box-shadow:0 0 8px var(--green)}
+.burger{display:none;width:44px;height:44px;border:1px solid var(--line);background:none;color:var(--green);font:700 20px/1 "JetBrains Mono",monospace;cursor:pointer}
+/* плаваюча кнопка «Обговорити проєкт» */
+.fab{position:fixed;right:24px;bottom:24px;z-index:60;display:flex;align-items:center;gap:10px;padding:14px 20px;background:var(--green);color:#03140a;
+  font:700 13px/1 "JetBrains Mono",monospace;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 0 0 1px rgba(57,255,122,.4),0 10px 30px rgba(0,0,0,.55),0 0 24px rgba(57,255,122,.35);
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:transform .25s,opacity .3s}
+.fab:hover{transform:translateY(-3px)}
+.fab svg{width:18px;height:18px;flex:none}
+.fab.hide{opacity:0;pointer-events:none;transform:translateY(20px)}
+@media (max-width:600px){.fab{right:14px;bottom:14px;padding:12px 14px;font-size:11px;gap:8px}}
+
+/* перший екран */
+.hero{display:grid;grid-template-columns:5fr 7fr;gap:48px;align-items:center;padding:56px var(--edge) 64px}
+.status{display:inline-flex;align-items:center;gap:10px;color:var(--green);margin-bottom:24px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.35}}
+h1{font:800 clamp(34px,4.4vw,60px)/1.05 Unbounded,sans-serif;letter-spacing:-.01em}
+h1 em{font-style:normal;white-space:nowrap;color:var(--green);text-shadow:0 0 24px rgba(57,255,122,.35)}
+.lead{color:var(--mute);font-size:18px;max-width:46ch;margin:22px 0 32px}
+.cta{display:flex;flex-wrap:wrap;gap:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:54px;padding:0 26px;font:700 14px/1 Unbounded,sans-serif;letter-spacing:.03em;border-radius:2px;transition:.2s;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
+.btn-g{background:var(--green);color:#03140a}
+.btn-g:hover{background:#7dffa8;box-shadow:0 0 28px rgba(57,255,122,.5)}
+.btn-o{background:rgba(255,255,255,.06);color:var(--ink);border:1px solid rgba(255,255,255,.25)}
+.btn-o:hover{border-color:var(--green);color:var(--green)}
+.offer{display:flex;align-items:center;gap:12px;margin-top:28px;padding:14px 16px;border:1px solid rgba(255,59,74,.4);background:rgba(255,59,74,.07);max-width:480px}
+.offer .tag{background:var(--red);color:#fff;padding:4px 8px;font-weight:600;white-space:nowrap}
+.offer p{font-size:14px;line-height:1.45}
+
+/* рамка з фото, як ігровий HUD */
+.shot{position:relative;padding:14px}
+.shot::before,.shot::after,.shot .c1,.shot .c2{content:"";position:absolute;width:34px;height:34px;border:2px solid var(--green)}
+.shot::before{top:0;left:0;border-right:0;border-bottom:0}
+.shot::after{top:0;right:0;border-left:0;border-bottom:0}
+.shot .c1{bottom:0;left:0;border-right:0;border-top:0}
+.shot .c2{bottom:0;right:0;border-left:0;border-top:0}
+.shot figure{position:relative;overflow:hidden;aspect-ratio:16/10;border:1px solid var(--line);background:var(--bg2)}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:52% 30%;display:block;transition:transform 1.4s ease}
+.shot:hover img{transform:scale(1.04)}
+.shot figure::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.12) 0 1px,transparent 1px 3px);pointer-events:none}
+.hud{display:flex;justify-content:space-between;gap:12px;margin-top:12px;color:var(--mute)}
+.hud span b{color:var(--green);font-weight:600}
+
+/* швидкі посилання на портфоліо */
+.quests{padding:0 var(--edge) 56px}
+.qrow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.q{display:flex;flex-direction:column;gap:6px;padding:16px 18px;border:1px solid var(--line);background:rgba(11,17,13,.8);transition:.2s}
+.q:hover{border-color:var(--green);transform:translateY(-2px)}
+.q .qimg{display:block;margin:-16px -18px 8px;aspect-ratio:16/9;overflow:hidden;border-bottom:1px solid var(--line)}
+.q .qimg img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block;transition:transform 1.2s ease}
+.q:hover .qimg img{transform:scale(1.06)}
+.q strong{font:700 16px/1.2 Unbounded,sans-serif}
+.q small{color:var(--mute);font-size:13px}
+.q .go{color:var(--green);font-size:12px}
+
+/* телефон: фото зверху, текст під ним — нічого не налазить */
+@media (max-width:900px){
+  header{gap:12px}
+  .burger{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex:none;width:46px;height:46px;border-color:var(--green);background:rgba(57,255,122,.06)}
+  .burger i{display:block;width:24px;height:3px;background:var(--green);box-shadow:0 0 8px rgba(57,255,122,.6);transition:transform .3s,opacity .2s,width .3s}
+  .burger i:nth-child(2){width:16px;align-self:flex-end;margin-right:11px}
+  header.open .burger i:nth-child(1){transform:translateY(8px) rotate(45deg)}
+  header.open .burger i:nth-child(2){opacity:0}
+  header.open .burger i:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+  nav{display:none;position:absolute;top:calc(100% + 6px);right:var(--edge);width:200px;flex-direction:column;gap:0;
+    background:rgba(8,14,10,.97);border:1px solid var(--green);box-shadow:0 14px 34px rgba(0,0,0,.7);animation:dd .18s ease}
+  @keyframes dd{from{opacity:0;transform:translateY(-6px)}}
+  header.open nav{display:flex}
+  nav a{padding:11px 14px;font-size:12px}
+  nav a+a{border-top:1px solid var(--line)}
+  nav a:hover{background:rgba(57,255,122,.08)}
+  nav a.on::after{left:0;right:auto;top:0;bottom:0;width:3px;height:auto}
+  .hero{grid-template-columns:1fr;gap:28px;padding:24px var(--edge) 40px}
+  .shot{order:-1;padding:10px}
+  .shot::before,.shot::after,.shot .c1,.shot .c2{width:24px;height:24px}
+  .shot figure{aspect-ratio:4/3}
+  .lead{font-size:16px;margin:16px 0 24px}
+  .btn{width:100%}
+  .qrow{grid-template-columns:1fr 1fr}
+}
+@media (max-width:600px){.hud{flex-direction:column;gap:4px}}
+/* ===== секції нижче першого екрана ===== */
+.sec{padding:88px var(--edge);border-top:1px solid var(--line)}
+.kick{color:var(--green);margin-bottom:12px;display:block}
+.sec h2.t{font:800 clamp(28px,3.4vw,44px)/1.1 Unbounded,sans-serif;margin-bottom:16px}
+.sec .sub{color:var(--mute);max-width:60ch;margin-bottom:40px}
+.card{border:1px solid var(--line);background:rgba(11,17,13,.85);transition:.25s}
+.card:hover{border-color:var(--green)}
+
+/* послуги */
+.svc{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.svc .card{padding:28px;display:flex;flex-direction:column;gap:14px}
+.svc h3{font:700 20px/1.2 Unbounded,sans-serif;color:var(--green)}
+.svc ul{list-style:none;color:var(--mute);display:grid;gap:8px}
+.svc li::before{content:"› ";color:var(--green)}
+/* пункти послуг розгортаються стрілочкою */
+.svc .more{display:grid;gap:6px}
+.svc details{border-bottom:1px dashed var(--line)}
+.svc details:last-child{border-bottom:0}
+.svc summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;color:#fff}
+.svc summary::-webkit-details-marker{display:none}
+.svc summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--green);border-bottom:2px solid var(--green);transform:translateY(-3px) rotate(45deg);transition:transform .3s;flex:none;margin-right:4px}
+.svc details[open] summary::after{transform:translateY(2px) rotate(225deg)}
+.svc summary:hover{color:var(--green)}
+.svc details p{color:var(--mute);font-size:15px;line-height:1.55;padding:0 0 12px;animation:tipIn .25s ease}
+.svc .note{margin-top:auto;padding-top:14px;border-top:1px dashed var(--line);color:var(--mute);font-size:14px}
+.svc .note b{color:var(--green);font-weight:600}
+
+/* портфоліо */
+.works{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+/* портфоліо, що розгортається */
+.pf-toggle{display:flex;align-items:center;justify-content:center;gap:14px;width:100%;padding:22px;margin-bottom:20px;cursor:pointer;
+  background:rgba(57,255,122,.06);border:1px dashed var(--green);color:var(--green);font:700 16px/1.2 Unbounded,sans-serif;transition:.2s}
+.pf-toggle:hover{background:rgba(57,255,122,.14);box-shadow:0 0 24px rgba(57,255,122,.25)}
+.pf-toggle .case{font-size:30px}
+.pf-toggle .hand{font-size:28px;animation:poke 1.2s ease-in-out infinite}
+@keyframes poke{50%{transform:translateY(6px)}}
+.pf-toggle[aria-expanded="true"] .hand{animation:none;transform:rotate(180deg)}
+.works-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s ease}
+.works-wrap>*{overflow:hidden;min-height:0;margin-top:0}
+#work.open .works-wrap,#portfolio.open .works-wrap{grid-template-rows:1fr}
+#portfolio .works-wrap>.qrow{padding-top:2px}
+.work{display:flex;flex-direction:column}
+.work figure{aspect-ratio:16/10;overflow:hidden;border-bottom:1px solid var(--line)}
+.work img{width:100%;height:100%;object-fit:cover;object-position:50% 0;display:block;transition:transform 1.4s ease}
+.work:hover img{transform:scale(1.05)}
+.work .body{padding:20px 22px 24px;display:flex;flex-direction:column;gap:8px}
+.work h3{font:800 26px/1.1 Unbounded,sans-serif;align-self:flex-start;background:var(--green);color:#03140a;padding:6px 14px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+.work p{color:var(--mute);font-size:15px}
+.work .meta{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:6px}
+.work .meta span{color:var(--mute)}
+.work .meta a{color:var(--green)}
+
+/* AI-аватар */
+/* колесо (3D-карусель) фото й відео */
+.cf{position:relative;margin-top:8px}
+.cf-title{margin:40px 0 4px;font:800 22px/1.2 Unbounded,sans-serif;color:var(--green);text-align:center}
+.cf-title::before{content:"› ";color:var(--mute)}
+.cf+.cf-title{margin-top:64px}
+.cf-stage{position:relative;height:clamp(400px,46vw,560px);perspective:1400px;touch-action:pan-y;user-select:none;overflow:hidden}
+.cf-item{position:absolute;left:50%;top:10px;width:clamp(230px,26vw,360px);aspect-ratio:3/4;margin-left:calc(clamp(230px,26vw,360px)/-2);
+  transition:transform .9s cubic-bezier(.2,.75,.2,1),opacity .9s,filter .9s;cursor:pointer;border:1px solid var(--line);overflow:hidden;background:#050806;box-shadow:0 30px 60px rgba(0,0,0,.6)}
+.cf-item.on{border-color:var(--green);box-shadow:0 0 34px rgba(57,255,122,.28),0 30px 60px rgba(0,0,0,.6)}
+.cf-item img,.cf-item video{width:100%;height:100%;object-fit:cover;object-position:50% 25%;display:block;pointer-events:none}
+.cf-item .vid{position:absolute;top:10px;left:10px;padding:3px 8px;background:var(--red);color:#fff;font:700 10px/1.4 "JetBrains Mono",monospace;letter-spacing:.1em}
+.cf-ctrl{position:absolute;top:50%;left:0;right:0;display:flex;justify-content:space-between;transform:translateY(-50%);pointer-events:none;z-index:20}
+.cf-ctrl button{pointer-events:auto;width:52px;height:52px;border:1px solid var(--green);background:rgba(5,8,6,.7);color:var(--green);font:700 20px/1 "JetBrains Mono",monospace;cursor:pointer;transition:.2s}
+.cf-ctrl button:hover{background:var(--green);color:#03140a}
+.cf-name{text-align:center;margin-top:14px;color:var(--ink);font:700 16px/1.3 Unbounded,sans-serif;min-height:1.3em}
+.cf-dots{display:flex;justify-content:center;gap:8px;margin-top:14px}
+.cf-dots button{width:8px;height:8px;border:0;padding:0;background:rgba(57,255,122,.3);cursor:pointer;transition:.4s}
+.cf-dots button.on{background:var(--green);width:28px}
+/* галерея сайтів: широкі кадри */
+.cf-sites .cf-stage{height:clamp(300px,34vw,440px)}
+.cf-sites .cf-item{width:clamp(280px,44vw,620px);aspect-ratio:16/10;margin-left:calc(clamp(280px,44vw,620px)/-2)}
+.cf-sites .cf-item img{object-position:50% 0}
+.cf-link{text-align:center;margin-top:10px}
+.cf-sub{text-align:center;margin:6px auto 0;max-width:46ch;padding:0 16px;color:var(--mute);font-size:15px;min-height:1.5em}
+.cf-sub:empty{display:none}
+.cf-name{color:var(--green)}
+.cf-go{display:inline-block;padding:10px 18px;border:1px solid var(--green);color:var(--green);font-size:13px;letter-spacing:.08em;transition:.2s}
+.cf-go:hover{background:var(--green);color:#03140a}
+@media (max-width:700px){.cf-sites .cf-stage{height:230px}.cf-sites .cf-item{width:300px;margin-left:-150px}}
+@media (max-width:700px){.cf-stage{height:340px}.cf-item{width:220px;margin-left:-110px}.cf-ctrl button{width:40px;height:40px}}
+@media (prefers-reduced-motion:reduce){.cf-item{transition:none}}
+
+/* про мене */
+.about{display:grid;grid-template-columns:5fr 7fr;gap:48px;align-items:center}
+.about figure{border:1px solid var(--line);overflow:hidden;aspect-ratio:4/5}
+.about img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block}
+.about p{color:var(--mute);margin-bottom:14px;max-width:58ch}
+.skills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.skills span{border:1px solid var(--line);padding:6px 10px;color:var(--ink)}
+/* підказки до навичок */
+.skills span[data-tip]{position:relative;cursor:help;transition:.2s}
+.skills span[data-tip]:hover,.skills span[data-tip]:focus{border-color:var(--green);color:var(--green);outline:none}
+.skills span[data-tip]::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 10px);width:max-content;max-width:min(300px,calc(100vw - 48px));
+  padding:12px 14px;background:#0d1a11;border:1px solid var(--green);color:var(--ink);
+  font:500 14px/1.5 Manrope,sans-serif;letter-spacing:0;text-transform:none;white-space:normal;
+  box-shadow:0 10px 30px rgba(0,0,0,.6);display:none;z-index:20;pointer-events:none;animation:tipIn .2s ease}
+@keyframes tipIn{from{opacity:0;transform:translateY(6px)}}
+.skills span[data-tip].r::after{left:auto;right:0}
+.skills span[data-tip]:hover::after,.skills span[data-tip]:focus::after{display:block}
+/* зелені слова з поясненням у «Про мене» */
+.about p .term{position:relative;color:var(--green);text-decoration:underline dotted;text-underline-offset:4px;cursor:help;outline:none;white-space:nowrap}
+.about p .term:hover,.about p .term:focus{text-decoration-style:solid;z-index:40}
+.about p .term::after{content:attr(data-tip);position:absolute;left:var(--tx,0);bottom:calc(100% + 10px);width:max-content;max-width:min(300px,calc(100vw - 48px));
+  padding:12px 14px;background:#0d1a11;border:1px solid var(--green);color:var(--ink);
+  font:500 14px/1.5 Manrope,sans-serif;white-space:normal;text-decoration:none;
+  box-shadow:0 10px 30px rgba(0,0,0,.6);display:none;z-index:20;pointer-events:none;animation:tipIn .2s ease}
+.about p .term:hover::after,.about p .term:focus::after{display:block}
+.skills-hint{color:var(--mute);margin-top:12px;font-size:11px}
+.skills .soon{font-style:normal;margin-left:8px;padding:1px 6px;background:var(--red);color:#fff;font-size:10px;letter-spacing:.08em;vertical-align:1px}
+
+/* етапи */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.steps .card{padding:24px}
+.steps h3{font:700 17px/1.25 Unbounded,sans-serif;margin:10px 0 8px}
+.steps p{color:var(--mute);font-size:15px}
+
+/* етапи: список-лінія, пункти напливають справа при прокрутці */
+#steps{overflow-x:clip}
+.tl{list-style:none;position:relative;max-width:820px;padding-left:44px;display:grid;gap:34px}
+.tl::before{content:"";position:absolute;left:11px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl::after{content:"";position:absolute;left:11px;top:6px;width:2px;height:var(--fill,0%);max-height:calc(100% - 12px);background:var(--green);box-shadow:0 0 12px rgba(57,255,122,.6);transition:height .6s ease}
+.tl li{position:relative;opacity:0;transform:translateX(80px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.75,.2,1)}
+.tl li.in{opacity:1;transform:none}
+.tl-dot{position:absolute;left:-44px;top:2px;width:24px;height:24px;border:2px solid var(--green);background:var(--bg,#050806);transform:rotate(45deg);z-index:1}
+.tl li.in .tl-dot{background:var(--green);box-shadow:0 0 16px rgba(57,255,122,.7);transition:background .4s .3s,box-shadow .4s .3s}
+.tl-tag{display:inline-block;color:var(--green);font-size:12px;letter-spacing:.12em;padding:3px 8px;border:1px solid rgba(57,255,122,.4)}
+.tl h3{font:700 22px/1.2 Unbounded,sans-serif;margin:10px 0 6px}
+.tl p{color:var(--mute);font-size:16px;max-width:52ch}
+@media (prefers-reduced-motion:reduce){.tl li{opacity:1;transform:none;transition:none}}
+
+/* FAQ */
+.faq{max-width:860px;display:grid;gap:10px}
+.faq details{border:1px solid var(--line);background:rgba(11,17,13,.85)}
+.faq summary{cursor:pointer;list-style:none;padding:18px 22px;font-weight:600;display:flex;justify-content:space-between;gap:16px}
+.faq summary::after{content:"+";color:var(--green);font:700 20px/1 Unbounded,sans-serif}
+.faq details[open] summary::after{content:"−"}
+.faq details p{padding:0 22px 20px;color:var(--mute)}
+
+/* контакти */
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.links{display:grid;gap:12px}
+.links a{display:flex;justify-content:space-between;align-items:center;padding:20px 22px}
+.links a b{font:700 18px/1 Unbounded,sans-serif}
+.links a span{color:var(--green)}
+@media (max-width:600px){
+  .links a{flex-direction:column;align-items:flex-start;gap:8px;padding:16px 18px}
+  .links a b{font-size:16px}
+  .links a span{font-size:12px;word-break:break-all}
+}
+footer{padding:28px var(--edge);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;color:var(--mute)}
+
+@media (max-width:900px){
+  .sec{padding:56px var(--edge)}
+  .svc,.works,.steps,.about,.contact{grid-template-columns:1fr}
+  .about figure{aspect-ratio:4/3}
+  footer{flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body id="top">
+
+<header>
+  <a class="logo" href="#top" title="Нагору">OLEKSII<b>.</b>DEV</a>
+  <nav class="mono">
+    <a href="#portfolio">Портфоліо</a>
+    <a href="#services">Послуги</a>
+    <a href="#steps">Як працюємо</a>
+    <a href="#about">Про мене</a>
+    <a href="#faq">Питання</a>
+  </nav>
+  <button class="burger" aria-label="Меню" aria-expanded="false"><i></i><i></i><i></i></button>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <div class="status mono"><i></i>Відкритий до нових проєктів</div>
+      <h1>Сайти, <em>AI-аватари</em> і відео для твого бізнесу</h1>
+      <p class="lead">Я Олексій. Роблю лендинги під ключ, генерую фото й відео з AI-аватаром і монтую рілси, щоб тебе помітили й тобі написали.</p>
+      <div class="cta">
+        <a class="btn btn-g" href="#portfolio">Дивитися портфоліо</a>
+        <a class="btn btn-o" href="#contact">Обговорити проєкт</a>
+      </div>
+      <div class="offer">
+        <span class="tag mono">Direct</span>
+        <p>Вартість залежить від складності. <a href="https://ig.me/m/Oleksii_diakun99" target="_blank" rel="noopener" style="color:var(--green)">Напиши мені в Direct</a> — обговоримо твій проєкт.</p>
+      </div>
+    </div>
+
+    <div class="shot">
+      <i class="c1"></i><i class="c2"></i>
+      <figure><img src="img/hero-studio.jpg" alt="Олексій працює з голографічними екранами з макетами сайтів" fetchpriority="high"></figure>
+      <div class="hud mono"><span>Гравець: <b>Олексій</b></span><span>Клас: <b>Digital-архітектор · Full-stack Creative Dev</b></span></div>
+    </div>
+  </section>
+
+  <section class="sec quests" id="portfolio">
+    <span class="kick mono">› Портфоліо</span>
+    <h2 class="t">Сайти, які я зробив</h2>
+    <p class="sub">Кожен сайт зроблено під конкретну нішу і її клієнтів.</p>
+    <button class="pf-toggle" aria-expanded="false" aria-controls="sitesWheel"><span class="case">💼</span><span class="lbl">Мої роботи — натисни, щоб відкрити</span><span class="hand">👇</span></button>
+    <div class="works-wrap">
+    <div class="cf cf-sites" id="sitesWheel" aria-roledescription="carousel" aria-label="Сайти, які я зробив">
+      <div class="cf-stage">
+        <div class="cf-item" data-name="VÉLA — магазин лаків і помад" data-href="https://oleksiid9-hue.github.io/vela/" data-go="Відкрити сайт →"><img src="img/pf-vela.jpg" alt="Сайт VÉLA"></div>
+        <div class="cf-item" data-name="AURELIAN — чоловічий одяг на замовлення" data-href="https://oleksiid9-hue.github.io/aurelian/" data-go="Відкрити сайт →"><img src="img/pf-aurelian.jpg" alt="Сайт AURELIAN" style="object-position:50% 0"></div>
+        <div class="cf-item" data-name="СУЗІР'Я — сайт астрологині" data-href="https://oleksiid9-hue.github.io/suzirya/" data-go="Відкрити сайт →"><img src="img/pf-oksana.jpg" alt="Сайт СУЗІР'Я" style="object-position:50% 78%"></div>
+      </div>
+      <div class="cf-ctrl"><button class="cf-prev" aria-label="Попередній">←</button><button class="cf-next" aria-label="Наступний">→</button></div>
+      <div class="cf-name" aria-live="polite"></div><div class="cf-sub"></div>
+      <div class="cf-link"><a class="cf-go mono" href="#" target="_blank" rel="noopener"></a></div>
+      <div class="cf-dots"></div>
+    </div>
+    </div>
+  </section>
+
+  <section class="sec" id="services">
+    <span class="kick mono">› Що я роблю</span>
+    <h2 class="t">Три послуги, з якими до тебе прийдуть клієнти</h2>
+    <p class="sub">Можна взяти одну або зібрати разом: сайт, фото й відео з тобою та рілси для реклами. Вартість залежить від складності, тож обговорюємо її особисто в Direct.</p>
+    <div class="svc">
+      <article class="card">
+        <h3>Сайт-лендинг під ключ</h3>
+        <div class="more">
+          <details><summary>Аналіз конкурентів і твоїх клієнтів</summary><p>Дивлюся, як працюють сайти конкурентів, хто твої клієнти і що вони шукають. На цьому будую структуру, щоб сайт відповідав на їхні запитання й вів до заявки.</p></details>
+          <details><summary>Дизайн під телефон і комп'ютер</summary><p>Спершу показую перший екран, далі всю сторінку. Пропоную кілька варіантів стилю, ти обираєш, і ми доводимо дизайн разом. Сайт однаково зручний на телефоні й на комп'ютері.</p></details>
+          <details><summary>Фото, тексти й кнопка «Написати»</summary><p>Підбираю або створюю фото, пишу зрозумілі тексти і ставлю кнопки, через які клієнт одразу пише тобі в Telegram чи Instagram.</p></details>
+          <details><summary>Запуск в інтернеті</summary><p>Розміщую сайт в інтернеті, перевіряю, що все відкривається швидко й без помилок, і віддаю тобі готове посилання.</p></details>
+        </div>
+      </article>
+      <article class="card">
+        <h3>AI-аватар: фото й відео</h3>
+        <div class="more">
+          <details><summary>Твоє обличчя в будь-якому образі</summary><p>З кількох твоїх фото я створюю AI-аватар — цифрову копію твого обличчя. Далі робимо будь-який образ: діловий костюм, вечірній вихід, подорож, ігровий стиль. Образ підбираємо під твої побажання.</p></details>
+          <details><summary>Фото для сайту, аватарки й реклами</summary><p>Роблю кілька варіантів кожного кадру, щоб ти обрав найкращий: фото для першого екрана сайту, аватарку для соцмереж, картинки для реклами.</p></details>
+          <details><summary>Короткі відео з тобою</summary><p>Оживляю готові фото: легкий рух, погляд, посмішка, крок. Виходять короткі відео для сторіс, рілсів і сайту.</p></details>
+          <details><summary>Без фотостудії й знімального дня</summary><p>Не треба орендувати студію, шукати фотографа й витрачати цілий день. Достатньо кількох твоїх фото, решту роблю я.</p></details>
+        </div>
+      </article>
+      <article class="card">
+        <h3>Монтаж рілсів</h3>
+        <div class="more">
+          <details><summary>Прибираю паузи й невдалі дублі</summary><p>Вирізаю зайве, щоб відео було динамічним і його дивилися до кінця.</p></details>
+          <details><summary>Український текст на екрані</summary><p>Додаю субтитри, щоб відео розуміли навіть без звуку.</p></details>
+          <details><summary>Вертикальний формат 9:16</summary><p>Роблю відео під екран телефона, без чорних смуг і обрізаних облич.</p></details>
+          <details><summary>Готово до Instagram і TikTok</summary><p>Віддаю файл, який одразу можна публікувати.</p></details>
+        </div>
+        <p class="note"><b>Напрям, який я розвиваю.</b> Вже маю перші роботи й постійно підвищую рівень.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec" id="avatar">
+    <span class="kick mono">› AI-аватар</span>
+    <h2 class="t">Один фотосет, будь-які образи</h2>
+    <p class="sub">Ці кадри зроблені з моїх фото за допомогою ШІ. Так само можу зробити для тебе: для сайту, реклами чи соцмереж.</p>
+    <h3 class="cf-title">AI-фотографії</h3>
+    <div class="cf" aria-roledescription="carousel" aria-label="AI-фотографії">
+      <div class="cf-stage">
+        <div class="cf-item" data-name="Герой відкритого світу" data-sub="Ігрова ілюстрація для аватарки, стрімів і соцмереж"><img src="img/hero-illustr.jpg" alt="AI-аватар в ілюстрованому ігровому стилі"></div>
+        <div class="cf-item" data-name="Old Money" data-sub="Діловий образ преміум-класу для сайту й реклами"><img src="img/av-white.jpg" alt="AI-аватар у білому костюмі"></div>
+        <div class="cf-item" data-name="Король свого бізнесу" data-sub="Образ лідера, який запам'ятовують з першого погляду"><img src="img/av-tron.jpg" alt="AI-аватар на троні"></div>
+        <div class="cf-item" data-name="Золота година у фортеці" data-sub="Будь-яка локація світу — без квитків і знімального дня"><img src="img/av-kamianets.jpg" alt="AI-аватар у Кам'янці-Подільському"></div>
+      </div>
+      <div class="cf-ctrl"><button class="cf-prev" aria-label="Попередній">←</button><button class="cf-next" aria-label="Наступний">→</button></div>
+      <div class="cf-name" aria-live="polite"></div><div class="cf-sub"></div>
+      <div class="cf-dots"></div>
+    </div>
+
+    <h3 class="cf-title">AI-відео з одного фото</h3>
+    <div class="cf" aria-roledescription="carousel" aria-label="AI-відео з одного фото">
+      <div class="cf-stage">
+        <div class="cf-item" data-name="Сцена лідера" data-sub="Живий кадр з одного фото — для реклами й обкладинок"><video src="video/v-tron.mp4?v=2" poster="video/v-tron.jpg" muted loop playsinline preload="metadata"></video></div>
+        <div class="cf-item" data-name="Old Money в русі" data-sub="Живий кадр для першого екрана сайту"><video src="video/v-white.mp4" poster="video/v-white.jpg" muted loop playsinline preload="metadata"></video></div>
+        <div class="cf-item" data-name="Прогулянка фортецею" data-sub="Кінематографічний кадр для рілсів і сторіс"><video src="video/v-kamianets.mp4" poster="video/v-kamianets.jpg" muted loop playsinline preload="metadata"></video></div>
+        <div class="cf-item" data-name="Вечірнє місто" data-sub="Легка хода — готовий початок для рілса"><video src="video/v-street.mp4" poster="video/v-street.jpg" muted loop playsinline preload="metadata"></video></div>
+        <div class="cf-item" data-name="Riviera Mood" data-sub="Літній образ, що дихає світлом"><video src="video/v-linen.mp4" poster="video/v-linen.jpg" muted loop playsinline preload="metadata"></video></div>
+      </div>
+      <div class="cf-ctrl"><button class="cf-prev" aria-label="Попередній">←</button><button class="cf-next" aria-label="Наступний">→</button></div>
+      <div class="cf-name" aria-live="polite"></div><div class="cf-sub"></div>
+      <div class="cf-dots"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="about">
+    <div class="about">
+      <figure><img src="img/about-hacker.jpg" alt="Олексій у худі працює за ноутбуком" style="object-position:66% 50%"></figure>
+      <div>
+        <span class="kick mono">› Про мене</span>
+        <h2 class="t">Привіт, я Олексій</h2>
+        <p>Я роблю сайти, які не лише гарно виглядають, а й продумані зсередини. За плечима — бекенд-розробка й математична освіта, тому я бачу сайт цілком: від першого екрана до того, як обробляється кожна заявка.</p>
+        <p>Я навчався в <span class="term" tabindex="0" data-tip="КПІ ім. Ігоря Сікорського — один із найсильніших технічних університетів України. Сюди складно вступити й непросто вчитися, тож це добра школа для інженера.">КПІ</span> за спеціальністю <span class="term" tabindex="0" data-tip="Прикладна математика (спеціальність 113) — математика, яку застосовують для реальних задач: програми, розрахунки, аналіз даних. Вчить мислити логічно й розв'язувати складні задачі.">113 «Прикладна математика»</span>. Там ми вивчали <span class="term" tabindex="0" data-tip="Python — одна з найпопулярніших мов програмування у світі. На ній пишуть сайти, автоматизації та штучний інтелект. Для тебе це означає: я можу не лише намалювати сайт, а й зробити так, щоб він працював.">Python</span>, <span class="term" tabindex="0" data-tip="Алгоритми — покрокові способи розв'язувати задачі. Завдяки ним програма працює швидко й без помилок.">алгоритми</span>, <span class="term" tabindex="0" data-tip="Штучний інтелект — програми, які вчаться на даних і самі знаходять рішення. Я розумію, як він влаштований зсередини, тому використовую його у твоєму проєкті з розумом.">штучний інтелект</span>, <span class="term" tabindex="0" data-tip="Data Science — наука про дані: як із цифр і таблиць зробити висновки, знайти закономірності й ухвалити правильне рішення. Допомагає розуміти клієнтів і рахувати, що реально працює.">Data Science</span> і моделі, а ще робили перші прості вебсторінки. Тож ще до всього цього руху навколо AI я опанував основи професії й натренував мозок на складну логіку.</p>
+        <p>Зараз я відкриваю для себе новий напрям — дизайн сайтів. Але моєю основою залишаються <span class="term" tabindex="0" data-tip="Бекенд — «двигун» сайту, якого не видно: форми, заявки, оплата, база клієнтів. Звичайний дизайнер робить лише вигляд, а я можу зробити так, щоб усе це ще й працювало.">бекенд</span> і <span class="term" tabindex="0" data-tip="Математика вчить думати структурно. Для тебе це означає: продумана логіка сайту, точні розрахунки (калькулятори, ціни, знижки) і рішення, які спираються на цифри, а не на здогадки.">математика</span>.</p>
+        <p><span class="term" tabindex="0" data-tip="Перший екран — те, що людина бачить одразу, коли відкриває сайт, ще до прокрутки. За кілька секунд він вирішує, чи залишиться клієнт, тому я показую його першим.">Перший екран</span> показую вже на старті, а далі ми доводимо сайт разом, поки тобі не сподобається.</p>
+        <p>Я також розробник: пишу на <span class="term" tabindex="0" data-tip="Python — мова, на якій працюють Instagram, Netflix і більшість рішень зі штучним інтелектом. Якщо твоєму сайту потрібна логіка (заявки, розрахунки, інтеграції), мені не треба шукати окремого програміста.">Python</span>, роблю вебзастосунки на <span class="term" tabindex="0" data-tip="Flask — інструмент на Python для серверної частини сайту: обробка заявок, особистий кабінет, зв'язок з базою даних. Це рівень розробника, а не лише дизайнера.">Flask</span> і <span class="term" tabindex="0" data-tip="Svelte — сучасний інструмент для швидких інтерактивних сайтів і застосунків. Сторінки на ньому легкі й швидко відкриваються навіть на телефоні.">Svelte</span>, налаштовую <span class="term" tabindex="0" data-tip="Автоматизації — коли рутину робить програма замість людини: заявки самі падають у таблицю, клієнт отримує відповідь у Telegram, звіти збираються автоматично. Економить тобі час і гроші.">автоматизації</span> та рішення зі <span class="term" tabindex="0" data-tip="Штучний інтелект у бізнесі: чат-бот, що відповідає клієнтам, генерація фото й текстів, аналіз заявок. Я розумію, як він працює, тому підбираю те, що справді корисне саме тобі.">штучним інтелектом</span>. Працював із <span class="term" tabindex="0" data-tip="База даних — упорядковане сховище інформації: клієнти, замовлення, товари. Я працював з великими базами й наводив у них лад, тож твої дані будуть структуровані, а сайт працюватиме швидко навіть з тисячами записів.">великими базами даних</span> і структурував їх. Окремий напрям, яким я захоплююсь, — <span class="term" tabindex="0" data-tip="Data Science — наука про дані: як із цифр зробити висновки. Для бізнесу це розуміння, хто твої клієнти, що вони купують і яка реклама реально окупається.">Data Science</span>.</p>
+        <div class="skills mono">
+          <span tabindex="0" data-tip="Почав вивчати нещодавно, щоб прокачати навички в дизайні. До цього я був бекенд-розробником.">Figma</span>
+          <span tabindex="0" data-tip="Почав вивчати нещодавно, щоб швидко збирати сайти без коду.">Tilda</span>
+          <span tabindex="0" data-tip="Цікавлюся з 6 класу школи, вже понад 15 років. Вивчав поступово для себе, тож верстка для мене не нова.">HTML / CSS</span>
+          <span tabindex="0" data-tip="Рекламні креативи для соцмереж і сайтів. Вони в мене виходять вдало. Незабаром — окрема послуга.">Креативи<em class="soon">незабаром</em></span>
+          <span tabindex="0" data-tip="Вже є готові роботи, зараз підвищую свій рівень.">Монтаж відео</span>
+          <span tabindex="0" data-tip="Генерую AI-аватари, фото й відео для сайтів і реклами.">ImagineArt</span>
+          <span tabindex="0" data-tip="Бекенд-розробник. Пишу на Python з першого курсу бакалаврату, приблизно з 2016 року.">Python</span>
+          <span tabindex="0" data-tip="Почав працювати з ним на першій роботі бекенд-розробником.">Flask</span>
+          <span tabindex="0" data-tip="Python-фреймворк для бекенду й вебзастосунків. Маю досвід роботи з ним.">Django</span>
+          <span tabindex="0" data-tip="Маю досвід: будую на ньому API для бекенду.">FastAPI</span>
+          <span tabindex="0" data-tip="Фреймворк для інтерфейсів вебзастосунків.">Svelte</span>
+          <span tabindex="0" data-tip="Працюю з базами даних, зокрема великими.">SQL</span>
+          <span tabindex="0" data-tip="Маю досвід: пакую застосунки в контейнери, щоб вони однаково запускались на будь-якому сервері.">Docker</span>
+          <span tabindex="0" data-tip="Обробка великих масивів даних: і для Data Science, і для робочих задач.">Pandas</span>
+          <span tabindex="0" data-tip="Вивчав у КПІ з другого курсу: різні моделі й те, як їх застосовувати.">Штучний інтелект</span>
+          <span tabindex="0" data-tip="Мій окремий напрям інтересу. Почав у КПІ з другого курсу, моделі й аналіз даних. Незабаром — окрема послуга.">Data Science<em class="soon">незабаром</em></span>
+          <span tabindex="0" data-tip="Налаштовую, щоб рутинні задачі виконувались самі. Незабаром — окрема послуга.">Автоматизації<em class="soon">незабаром</em></span>
+          <span tabindex="0" data-tip="Почав вивчати нещодавно й активно просуваюсь: з ним роблю сайти, тексти й автоматизації.">Claude</span>
+        </div>
+        <p class="skills-hint mono">Наведи або натисни на навичку, щоб дізнатися більше</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="steps">
+    <span class="kick mono">› Як ми працюємо</span>
+    <h2 class="t">Від ідеї до сайту</h2>
+    <p class="sub">Ти завжди бачиш, що відбувається, і погоджуєш кожен крок.</p>
+    <ol class="tl">
+      <li><span class="tl-dot"></span><span class="tl-tag mono">Старт</span><h3>Коротка розмова</h3><p>Розповідаєш про бізнес і клієнтів, надсилаєш фото й контакти.</p></li>
+      <li><span class="tl-dot"></span><span class="tl-tag mono">Стиль</span><h3>Перший екран</h3><p>Показую 2–3 варіанти стилю, ти обираєш один.</p></li>
+      <li><span class="tl-dot"></span><span class="tl-tag mono">Збірка</span><h3>Увесь сайт</h3><p>Збираю всі блоки й перевіряю на телефоні та комп'ютері.</p></li>
+      <li><span class="tl-dot"></span><span class="tl-tag mono">Запуск</span><h3>Сайт онлайн</h3><p>Викладаю сайт в інтернет і передаю тобі посилання.</p></li>
+    </ol>
+  </section>
+
+  <section class="sec" id="faq">
+    <span class="kick mono">› Питання</span>
+    <h2 class="t">Часті питання</h2>
+    <div class="faq">
+      <details><summary>Скільки часу займає сайт?</summary><p>Перший екран показую за 1–2 дні, повний лендинг зазвичай займає до тижня. Строк залежить від того, як швидко ти надішлеш тексти й фото.</p></details>
+      <details><summary>Що потрібно від мене?</summary><p>Назва, що ти пропонуєш, ціни, 6–10 фото робіт і контакти. Якщо фото немає, можу підібрати або згенерувати.</p></details>
+      <details><summary>Чи можна вносити правки?</summary><p>Так. Збираємо правки одним списком, і я вношу їх точково, не переробляючи весь сайт.</p></details>
+      <details><summary>Чи буде сайт добре виглядати на телефоні?</summary><p>Так, кожен блок я перевіряю окремо на телефоні: текст не налазить на фото, кнопки зручно натискати.</p></details>
+      <details><summary>Скільки коштує робота?</summary><p>Залежить від складності й обсягу. Напиши мені в Direct в Instagram — обговоримо твій проєкт, і я назву вартість.</p></details>
+    </div>
+  </section>
+
+  <section class="sec" id="contact">
+    <div class="contact">
+      <div>
+        <span class="kick mono">› Контакти</span>
+        <h2 class="t">Готовий почати свою місію?</h2>
+        <p class="sub">Напиши, чим ти займаєшся, і я запропоную, з чого почати. Відповідаю протягом дня.</p>
+        <a class="btn btn-g" href="https://t.me/Oleksii_1999" target="_blank" rel="noopener">Написати в Telegram</a>
+      </div>
+      <div class="links">
+        <a class="card" href="https://t.me/Oleksii_1999" target="_blank" rel="noopener"><b>Telegram</b><span class="mono">@Oleksii_1999 →</span></a>
+        <a class="card" href="https://instagram.com/Oleksii_diakun99" target="_blank" rel="noopener"><b>Instagram</b><span class="mono">@Oleksii_diakun99 →</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="mono">
+  <span>OLEKSII.DEV</span>
+  <span>© 2026 · Сайти, AI-аватари, відео</span>
+</footer>
+
+<a class="fab" href="#contact" aria-label="Обговорити проєкт"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Обговорити проєкт</a>
+
+<script>
+// підказка біля правого краю екрана відкривається вліво, щоб не вилазила за екран
+function fixTips(){document.querySelectorAll('.about p .term').forEach(t=>{const b=t.getBoundingClientRect(),w=Math.min(300,innerWidth-48);t.style.setProperty('--tx',Math.round(Math.min(0,innerWidth-16-w-b.left))+'px')});document.querySelectorAll('.skills span[data-tip]').forEach(s=>{s.classList.remove('r');const b=s.getBoundingClientRect();if(b.left+300>innerWidth&&b.right>innerWidth/2)s.classList.add('r')})}
+addEventListener('load',fixTips);addEventListener('resize',fixTips);
+
+// меню: зменшується при прокрутці, на телефоні відкривається кнопкою, підсвічує поточний розділ
+const hd=document.querySelector('header'), bg=hd.querySelector('.burger');
+addEventListener('scroll',()=>hd.classList.toggle('small',scrollY>40),{passive:true});
+bg.addEventListener('click',()=>{const o=hd.classList.toggle('open');bg.setAttribute('aria-expanded',o)});
+function closeMenu(){hd.classList.remove('open');bg.setAttribute('aria-expanded',false)}
+hd.querySelectorAll('nav a, .hbtn, .logo').forEach(a=>a.addEventListener('click',closeMenu));
+document.addEventListener('click',e=>{if(!hd.contains(e.target))closeMenu()});
+
+// плаваюча кнопка ховається, коли видно блок контактів
+(()=>{const f=document.querySelector('.fab'),c=document.querySelector('#contact'),h=document.querySelector('.hero .cta');if(!f||!c)return;
+  const vis=new Map();const upd=()=>f.classList.toggle('hide',[...vis.values()].some(Boolean));
+  const io=new IntersectionObserver(es=>{es.forEach(e=>vis.set(e.target,e.isIntersecting));upd()},{threshold:.15});
+  io.observe(c);if(h)io.observe(h);})();
+
+// етапи: кожен пункт напливає справа, лінія заповнюється зеленим
+(()=>{const tl=document.querySelector('.tl');if(!tl)return;const li=[...tl.children];
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);
+    const n=li.filter(x=>x.classList.contains('in')).length;tl.style.setProperty('--fill',(n/li.length*100)+'%')}}),{threshold:.35,rootMargin:'0px 0px -10% 0px'});
+  li.forEach(x=>io.observe(x));})();
+
+// колесо AI-аватарів: фото й відео, відео грає лише в центрі
+document.querySelectorAll('.cf').forEach(sec=>{
+  const items=[...sec.querySelectorAll('.cf-item')],N=items.length;
+  const dots=sec.querySelector('.cf-dots'),nm=sec.querySelector('.cf-name');
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  let cur=0,timer,seen=false;
+  items.forEach((_,i)=>{const b=document.createElement('button');b.setAttribute('aria-label','Слайд '+(i+1));b.onclick=()=>go(i);dots.appendChild(b)});
+  function render(){
+    const w=items[0].offsetWidth,mob=innerWidth<700;
+    items.forEach((it,i)=>{
+      let o=i-cur; if(o>N/2)o-=N; if(o<-N/2)o+=N;
+      const a=Math.abs(o);
+      it.style.transform=`translateX(${o*w*(mob?.55:.68)}px) translateZ(${-a*170}px) rotateY(${-Math.sign(o)*Math.min(a,2)*24}deg)`;
+      it.style.opacity=a>3?0:a>2?.35:1;
+      it.style.filter=a?`brightness(${1-a*.25}) saturate(${1-a*.2})`:'none';
+      it.style.zIndex=10-a; it.classList.toggle('on',a===0);
+      const v=it.querySelector('video'); if(v){ if(a===0&&seen){v.play().catch(()=>{})} else v.pause(); }
+    });
+    nm.textContent=items[cur].dataset.name;
+    const sb=sec.querySelector('.cf-sub'); if(sb)sb.textContent=items[cur].dataset.sub||'';
+    const go=sec.querySelector('.cf-go'); if(go){const d=items[cur].dataset;go.href=d.href;go.textContent=d.go;if(d.href.startsWith('#'))go.removeAttribute('target');else go.target='_blank'}
+    [...dots.children].forEach((d,i)=>d.classList.toggle('on',i===cur));
+  }
+  function go(i){cur=(i+N)%N;render();restart()}
+  function restart(){clearInterval(timer);if(!reduce&&seen)timer=setInterval(()=>go(cur+1),4500)}
+  sec.querySelector('.cf-prev').onclick=()=>go(cur-1);
+  sec.querySelector('.cf-next').onclick=()=>go(cur+1);
+  items.forEach((it,i)=>it.addEventListener('click',()=>{if(i!==cur)go(i);else if(it.dataset.href){const h=it.dataset.href;h.startsWith('#')?location.hash=h:open(h,'_blank','noopener')}}));
+  sec.addEventListener('mouseenter',()=>clearInterval(timer));sec.addEventListener('mouseleave',restart);
+  let x0=null;const st=sec.querySelector('.cf-stage');
+  st.addEventListener('pointerdown',e=>{x0=e.clientX});
+  addEventListener('pointerup',e=>{if(x0===null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>40)go(cur+(dx<0?1:-1))});
+  sec.tabIndex=0;sec.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(cur-1);if(e.key==='ArrowRight')go(cur+1)});
+  addEventListener('resize',render);
+  new IntersectionObserver(es=>{seen=es[0].isIntersecting;render();restart()},{threshold:.3}).observe(sec);
+  render();
+});
+
+// портфоліо: розгортається кнопкою; посилання на роботи відкривають його самі
+function setBox(box,o){const t=box.querySelector('.pf-toggle');box.classList.toggle('open',o);t.setAttribute('aria-expanded',o);t.querySelector('.lbl').textContent=o?'Мої роботи — натисни, щоб згорнути':'Мої роботи — натисни, щоб відкрити';if(o)setTimeout(()=>dispatchEvent(new Event('resize')),50)}
+const pf=document.querySelector('#portfolio');
+pf.querySelector('.pf-toggle').addEventListener('click',()=>setBox(pf,!pf.classList.contains('open')));
+document.querySelectorAll('a[href="#portfolio"]').forEach(a=>a.addEventListener('click',()=>setBox(pf,true)));
+if(location.hash==='#portfolio')setBox(pf,true);
+const links=[...hd.querySelectorAll('nav a')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
+links.forEach(a=>{const s=document.querySelector(a.getAttribute('href'));if(s)io.observe(s)});
+</script>
+
+</body>
+</html>
