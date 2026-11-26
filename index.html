@@ -201,6 +201,17 @@ h1 em{font-style:normal;white-space:nowrap;color:var(--green);text-shadow:0 0 24
 @media (max-width:700px){.cf-sites .cf-stage{height:230px}.cf-sites .cf-item{width:300px;margin-left:-150px}}
 @media (max-width:700px){.cf-stage{height:340px}.cf-item{width:220px;margin-left:-110px}.cf-ctrl button{width:40px;height:40px}}
 @media (prefers-reduced-motion:reduce){.cf-item{transition:none}}
+/* галерея-дуга: картки сайтів пливуть вигнутою дугою, у центральній сайт гортається */
+.arc{position:relative;margin:4px 0 26px}
+.arc-stage{position:relative;height:clamp(460px,52vw,640px);overflow:hidden;touch-action:pan-y;user-select:none;
+  -webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent)}
+.arc-card{position:absolute;left:50%;top:50%;width:clamp(280px,40vw,560px);aspect-ratio:16/10;margin:calc(clamp(280px,40vw,560px)*-.3125) 0 0 calc(clamp(280px,40vw,560px)/-2);
+  overflow:hidden;background:#050806;border:1px solid var(--line);box-shadow:0 26px 50px rgba(0,0,0,.65);cursor:pointer;will-change:transform}
+.arc-card.on{border-color:var(--green);box-shadow:0 0 34px rgba(57,255,122,.3),0 26px 50px rgba(0,0,0,.65)}
+.arc-card img{display:block;width:100%;height:auto;pointer-events:none;will-change:transform}
+.arc-cap{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 18px;margin-top:8px;text-align:center}
+.arc-name{color:var(--green);font:700 16px/1.3 Unbounded,sans-serif}
+@media (max-width:700px){.arc-stage{height:440px}.arc-card{width:82vw;margin:-25.6vw 0 0 -41vw}.arc-name{width:100%;min-height:2.6em;display:flex;align-items:center;justify-content:center}}
 
 /* про мене */
 .about{display:grid;grid-template-columns:5fr 7fr;gap:48px;align-items:center}
@@ -321,6 +332,17 @@ footer{padding:28px var(--edge);border-top:1px solid var(--line);display:flex;ju
     <span class="kick mono">› Портфоліо</span>
     <h2 class="t">Сайти, які я зробив</h2>
     <p class="sub">Кожен сайт зроблено під конкретну нішу і її клієнтів.</p>
+    <div class="arc" aria-roledescription="carousel" aria-label="Сайти, які я зробив — гортаються самі">
+      <div class="arc-stage">
+        <div class="arc-card" data-name="VÉLA — магазин лаків і помад" data-href="https://oleksiid9-hue.github.io/vela/"><img src="img/arc-vela.jpg" alt="Сайт VÉLA"></div>
+        <div class="arc-card" data-name="AURELIAN — чоловічий одяг на замовлення" data-href="https://oleksiid9-hue.github.io/aurelian/"><img src="img/arc-aurelian.jpg" alt="Сайт AURELIAN"></div>
+        <div class="arc-card" data-name="СУЗІР'Я — сайт астрологині" data-href="https://oleksiid9-hue.github.io/suzirya/"><img src="img/arc-suzirya.jpg" alt="Сайт СУЗІР'Я"></div>
+        <div class="arc-card" data-name="VÉLA — магазин лаків і помад" data-href="https://oleksiid9-hue.github.io/vela/"><img src="img/arc-vela.jpg" alt="" loading="lazy"></div>
+        <div class="arc-card" data-name="AURELIAN — чоловічий одяг на замовлення" data-href="https://oleksiid9-hue.github.io/aurelian/"><img src="img/arc-aurelian.jpg" alt="" loading="lazy"></div>
+        <div class="arc-card" data-name="СУЗІР'Я — сайт астрологині" data-href="https://oleksiid9-hue.github.io/suzirya/"><img src="img/arc-suzirya.jpg" alt="" loading="lazy"></div>
+      </div>
+      <div class="arc-cap"><span class="arc-name" aria-live="polite"></span><a class="cf-go mono arc-go" href="#" target="_blank" rel="noopener">Відкрити сайт →</a></div>
+    </div>
     <button class="pf-toggle" aria-expanded="false" aria-controls="sitesWheel"><span class="case">💼</span><span class="lbl">Мої роботи — натисни, щоб відкрити</span><span class="hand">👇</span></button>
     <div class="works-wrap">
     <div class="cf cf-sites" id="sitesWheel" aria-roledescription="carousel" aria-label="Сайти, які я зробив">
@@ -393,7 +415,7 @@ footer{padding:28px var(--edge);border-top:1px solid var(--line);display:flex;ju
     <h3 class="cf-title">AI-відео з одного фото</h3>
     <div class="cf" aria-roledescription="carousel" aria-label="AI-відео з одного фото">
       <div class="cf-stage">
-        <div class="cf-item" data-name="Сцена лідера" data-sub="Живий кадр з одного фото — для реклами й обкладинок"><video src="video/v-tron.mp4?v=2" poster="video/v-tron.jpg" muted loop playsinline preload="metadata"></video></div>
+        <div class="cf-item" data-name="Сцена лідера" data-sub="Живий кадр з одного фото — для реклами й обкладинок"><video src="video/v-tron.mp4?v=3" poster="video/v-tron.jpg" muted loop playsinline preload="metadata"></video></div>
         <div class="cf-item" data-name="Old Money в русі" data-sub="Живий кадр для першого екрана сайту"><video src="video/v-white.mp4" poster="video/v-white.jpg" muted loop playsinline preload="metadata"></video></div>
         <div class="cf-item" data-name="Прогулянка фортецею" data-sub="Кінематографічний кадр для рілсів і сторіс"><video src="video/v-kamianets.mp4" poster="video/v-kamianets.jpg" muted loop playsinline preload="metadata"></video></div>
         <div class="cf-item" data-name="Вечірнє місто" data-sub="Легка хода — готовий початок для рілса"><video src="video/v-street.mp4" poster="video/v-street.jpg" muted loop playsinline preload="metadata"></video></div>
@@ -550,6 +572,36 @@ document.querySelectorAll('.cf').forEach(sec=>{
   new IntersectionObserver(es=>{seen=es[0].isIntersecting;render();restart()},{threshold:.3}).observe(sec);
   render();
 });
+
+// галерея-дуга: картки пливуть по дузі, центральна вирівнюється, і в ній сайт гортається вниз
+(()=>{const sec=document.querySelector('.arc');if(!sec)return;
+  const cards=[...sec.querySelectorAll('.arc-card')],N=cards.length,nm=sec.querySelector('.arc-name'),lk=sec.querySelector('.arc-go');
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches,HOLD=5200,MOVE=1200;
+  const sc=new Array(N).fill(0),ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+  let pos=0,from=0,to=0,t0=0,held=0,mode='hold',seen=false,paused=false,raf=0,last=0,cur=-1;
+  const wrap=o=>{o=((o%N)+N)%N;return o>N/2?o-N:o};
+  function draw(){
+    const h=cards[0].offsetHeight,R=h*4.6,a0=h*1.06/R;
+    cards.forEach((c,i)=>{const o=wrap(i-pos),a=o*a0,ab=Math.abs(o);
+      c.style.transform=`translate(${R*(1-Math.cos(a))}px,${R*Math.sin(a)}px) rotate(${-a}rad) scale(${1-Math.min(ab,3)*.09})`;
+      c.style.zIndex=10-Math.round(ab);c.style.opacity=ab>2.6?0:1;
+      c.style.filter=ab<.05?'none':`brightness(${1-Math.min(ab,2)*.22})`;
+      if(ab>2.4)sc[i]=0;
+      const im=c.firstElementChild;im.style.transform=`translateY(${-sc[i]}px)`;
+    });
+    const k=((Math.round(pos)%N)+N)%N;cards.forEach((c,i)=>c.classList.toggle('on',i===k));
+    if(k!==cur){cur=k;nm.textContent=cards[k].dataset.name;lk.href=cards[k].dataset.href}
+  }
+  function tick(now){raf=0;if(!seen)return;const dt=Math.min(now-(last||now),50);last=now;
+    if(mode==='move'){const p=Math.min((now-t0)/MOVE,1);pos=from+(to-from)*ease(p);if(p>=1){pos=to;mode='hold';held=0}}
+    else if(!paused&&!reduce){const k=((Math.round(pos)%N)+N)%N,c=cards[k],max=Math.max(0,Math.min(c.firstElementChild.offsetHeight-c.offsetHeight,c.offsetHeight*3.6));
+      held+=dt;sc[k]=Math.min(max,sc[k]+max*dt/HOLD);if(held>HOLD+700)go(Math.round(pos)+1)}
+    draw();if(mode==='move'||!reduce)raf=requestAnimationFrame(tick)}
+  function go(target){from=pos;to=target;t0=performance.now();mode='move';if(!raf&&seen)raf=requestAnimationFrame(tick)}
+  cards.forEach((c,i)=>c.addEventListener('click',()=>{const o=wrap(i-pos);if(Math.abs(o)<.5)open(c.dataset.href,'_blank','noopener');else go(Math.round(pos+o))}));
+  addEventListener('resize',draw);
+  new IntersectionObserver(es=>{seen=es[0].isIntersecting;last=0;if(seen&&!raf)raf=requestAnimationFrame(tick)},{threshold:.2}).observe(sec);
+  draw();})();
 
 // портфоліо: розгортається кнопкою; посилання на роботи відкривають його самі
 function setBox(box,o){const t=box.querySelector('.pf-toggle');box.classList.toggle('open',o);t.setAttribute('aria-expanded',o);t.querySelector('.lbl').textContent=o?'Мої роботи — натисни, щоб згорнути':'Мої роботи — натисни, щоб відкрити';if(o)setTimeout(()=>dispatchEvent(new Event('resize')),50)}
