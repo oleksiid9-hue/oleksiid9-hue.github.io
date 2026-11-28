@@ -294,8 +294,15 @@ footer{padding:28px var(--edge);border-top:1px solid var(--line);display:flex;ju
   .about figure{aspect-ratio:4/3}
   footer{flex-direction:column}
 }
+/* друк тексту, як у терміналі */
+.tw-ghost{visibility:hidden}
+.tw-caret{display:inline-block;width:.5em;height:.95em;margin-left:2px;background:var(--green);vertical-align:-.1em;box-shadow:0 0 10px rgba(57,255,122,.7);animation:twBlink .9s steps(1) infinite}
+@keyframes twBlink{50%{opacity:0}}
+html.tw .hero .status,html.tw .hero h1,html.tw .hero .lead,html.tw .hero .offer p{visibility:hidden}
+html.tw .tw-on{visibility:visible!important}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
+<script>if(!matchMedia('(prefers-reduced-motion:reduce)').matches)document.documentElement.classList.add('tw')</script>
 </head>
 <body id="top">
 
@@ -621,6 +628,28 @@ if(location.hash==='#portfolio')setBox(pf,true);
 const links=[...hd.querySelectorAll('nav a')];
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
 links.forEach(a=>{const s=document.querySelector(a.getAttribute('href'));if(s)io.observe(s)});
+
+/* друк тексту: перший екран по черзі, заголовки — коли до них доходиш */
+(()=>{
+  if(!document.documentElement.classList.contains('tw'))return;
+  const prep=el=>{const parts=[],w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let n;const ns=[];
+    while(n=w.nextNode())if(n.nodeValue.trim())ns.push(n);
+    ns.forEach(t=>{const shown=document.createTextNode(''),g=document.createElement('span');g.className='tw-ghost';g.textContent=t.nodeValue;
+      t.replaceWith(shown,g);parts.push({shown,g})});
+    el.classList.add('tw-on');return parts};
+  const type=(el,ms)=>new Promise(done=>{const parts=prep(el),c=document.createElement('span');c.className='tw-caret';let i=0;
+    const step=()=>{while(i<parts.length&&!parts[i].g.textContent)i++;
+      if(i>=parts.length){setTimeout(()=>c.remove(),700);done();return}
+      const p=parts[i];p.g.before(c);p.shown.nodeValue+=p.g.textContent[0];p.g.textContent=p.g.textContent.slice(1);
+      setTimeout(step,ms*(.6+Math.random()*.8))};
+    step()});
+  const h=document.querySelector('.hero');
+  (async()=>{for(const [s,ms] of [['.status',32],['h1',48],['.lead',17],['.offer p',15]]){const el=h.querySelector(s);if(el)await type(el,ms)}})();
+  const io2=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;io2.unobserve(e.target);
+    const k=e.target.querySelector('.kick'),t=e.target.querySelector('h2.t');
+    (async()=>{if(k)await type(k,30);if(t)await type(t,40)})()}),{rootMargin:'0px 0px -20% 0px'});
+  document.querySelectorAll('.sec').forEach(s=>{s.querySelectorAll('.kick,h2.t').forEach(el=>{el.style.visibility='hidden'});io2.observe(s)});
+})();
 </script>
 
 </body>
