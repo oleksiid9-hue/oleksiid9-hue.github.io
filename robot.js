@@ -299,6 +299,10 @@ html.bot-gl main img,html.bot-gl main video{opacity:.3}`;
   const EVENTS = ['sway', 'spin', 'hop', 'peek', 'sway', 'peek'];
   const EV_DUR = { sway: 2600, spin: 1300, hop: 900, peek: 2200 };
   let ev = null, nextEv = performance.now() + 5000 + Math.random() * 6000;
+  // рідкі «злі» івенти (раз на 25–45 с): червоніє лише сам робот і робить один злий жест; сайт не змінюється
+  const ANGRY_EV = ['shake', 'glare', 'nod', 'turn', 'lunge', 'boil'];
+  const ANGRY_DUR = { shake: 900, glare: 1300, nod: 650, turn: 1000, lunge: 750, boil: 850 };
+  let mev = null, nextMev = performance.now() + (/[?&]mev=1/.test(location.search) ? 2000 : 25000 + Math.random() * 20000), lastMev = '';
   const tmp = new THREE.Color();
   let lastRgb = '', siteVis = 0, siteHold = 0;
   const clock = new THREE.Clock();
@@ -335,7 +339,7 @@ html.bot-gl main img,html.bot-gl main video{opacity:.3}`;
     // випадкові івенти раз на 7–16 с: погойдатись, крутнутись, підстрибнути, зазирнути в текст
     let evX = 0, evY = 0, evRoll = 0, evYaw = 0, evPitch = 0, evLook = 0;
     if (!reduce) {
-      if (!ev && now > nextEv && angerVis < 0.2 && flyK < 0.05) {
+      if (!ev && !mev && now > nextEv && angerVis < 0.2 && flyK < 0.05) {
         const type = EVENTS[Math.floor(Math.random() * EVENTS.length)];
         ev = { type, t0: now, dur: EV_DUR[type], dir: Math.random() < 0.5 ? -1 : 1 };
       }
@@ -380,6 +384,31 @@ html.bot-gl main img,html.bot-gl main video{opacity:.3}`;
     agit = Math.max(0, agit - dt * (calmRate + (hoverCta ? 1.2 : 0)));
     const aT = Math.min(1, agit);
     angerVis += (aT - angerVis) * Math.min(1, dt * (aT > angerVis ? 6 : 4));
+    let mevA = 0, aYaw = 0, aPitch = 0, aRoll = 0, aZ = 0, aY = 0, aLid = 1;
+    if (!reduce) {
+      if (!mev && now > nextMev && angerVis < 0.2 && !ev && flyK < 0.05) {
+        let type; do { type = ANGRY_EV[Math.floor(Math.random() * ANGRY_EV.length)]; } while (type === lastMev);
+        lastMev = type; mev = { type, t0: now, dur: 1900 + Math.random() * 600, gd: ANGRY_DUR[type], dir: Math.random() < 0.5 ? -1 : 1 };
+      }
+      if (mev) {
+        const e = now - mev.t0;
+        if (e >= mev.dur || angerVis > 0.5) { mev = null; nextMev = now + 25000 + Math.random() * 20000; }
+        else {
+          mevA = 0.9 * Math.min(1, e / 300, (mev.dur - e) / 500);
+          const p = (e - 350) / mev.gd;
+          if (p > 0 && p < 1) {
+            const w0 = Math.min(1, p / 0.12, (1 - p) / 0.12), w = w0 * w0 * (3 - 2 * w0);
+            if (mev.type === 'shake') aYaw = Math.sin(p * Math.PI * 2 * 3.5) * 0.4 * (1 - p * 0.6) * w;
+            if (mev.type === 'glare') { aPitch = 0.34 * w; aY = -0.07 * w; aLid = 1 - 0.35 * w; aRoll = Math.sin(t * 38) * 0.02 * w; }
+            if (mev.type === 'nod') aPitch = Math.sin(p * Math.PI * 2 * 2) * 0.26 * w;
+            if (mev.type === 'turn') { aYaw = -0.9 * mev.dir * w; aRoll = 0.14 * mev.dir * w; }
+            if (mev.type === 'lunge') aZ = p < 0.25 ? -0.16 * Math.sin(p / 0.25 * Math.PI) : 0.45 * Math.sin((p - 0.25) / 0.75 * Math.PI);
+            if (mev.type === 'boil') aRoll = Math.sin(p * Math.PI * 2 * 3.5) * 0.13 * w;
+          }
+        }
+      }
+    }
+    const eyeA = Math.max(angerVis, mevA);   // для вигляду самого робота (сайт дивиться лише на angerVis)
     let nearContact = false;
     if (contact) { const r = contact.getBoundingClientRect(); nearContact = r.top < vh * 0.6 && r.bottom > vh * 0.3; }
     // у польоті дивиться туди, куди летить
@@ -394,7 +423,7 @@ html.bot-gl main img,html.bot-gl main video{opacity:.3}`;
     const amp = reduce ? 0 : 0.09;
     root.position.y = Math.sin(t * 1.3) * amp * (1 - angerVis * 0.5) + happy * 0.035 * Math.abs(Math.sin(t * 7)) * (reduce ? 0 : 1);
     let jx = 0, jy = 0;
-    if (!reduce && angerVis > 0.05) { jx = (Math.random() - 0.5) * 0.03 * angerVis; jy = (Math.random() - 0.5) * 0.03 * angerVis; }
+    if (!reduce && eyeA > 0.05) { jx = (Math.random() - 0.5) * 0.03 * eyeA; jy = (Math.random() - 0.5) * 0.03 * eyeA; }
     flinch = Math.max(0, flinch - dt * 3);
     head.position.set(jx, jy, -flinch * 0.3);
     head.rotation.x = look.x + Math.sin(t * 0.9) * 0.03;
@@ -411,26 +440,29 @@ html.bot-gl main img,html.bot-gl main video{opacity:.3}`;
     const sway = reduce ? 0 : joy * (1 - angerVis);
     head.rotation.z += sway * 0.16 * Math.sin(t * 5);
     root.position.x = sway * 0.06 * Math.sin(t * 5 - 0.6);
+    head.rotation.x += aPitch; head.rotation.y += aYaw; head.rotation.z += aRoll;
+    head.position.z += aZ; root.position.y += aY;
+    root.rotation.z = reduce ? 0 : (Math.sin(t * 8.5) * 0.05 + Math.sin(t * 13.1) * 0.02) * mevA;
 
     pOff.x += (tx * 0.07 - pOff.x) * Math.min(1, dt * 12);
     pOff.y += (ty * 0.07 - pOff.y) * Math.min(1, dt * 12);
     pupil.position.set(pOff.x, pOff.y, 0.004);
-    const dil = 1 + happy * 0.35 * (1 - angerVis);
-    const slit = THREE.MathUtils.smoothstep(angerVis, 0.4, 0.85);
+    const dil = 1 + happy * 0.35 * (1 - eyeA);
+    const slit = THREE.MathUtils.smoothstep(eyeA, 0.4, 0.85);
     pupil.scale.set(THREE.MathUtils.lerp(dil, 0.24, slit), THREE.MathUtils.lerp(dil, 1.95, slit), 1);
 
     blinkT += dt; let ls = 1;
-    if (blinkT > nextBlink && angerVis < 0.3) {
+    if (blinkT > nextBlink && eyeA < 0.3) {
       const p = (blinkT - nextBlink) / 0.16;
       if (p >= 1) { blinkT = 0; nextBlink = 2.5 + Math.random() * 4; } else ls = Math.max(0.05, Math.abs(1 - 2 * p));
     }
-    lid.scale.y = ls;
+    lid.scale.y = Math.min(ls, aLid);
 
-    if (angerVis < 0.5) tmp.copy(C.calm).lerp(C.amber, angerVis * 2); else tmp.copy(C.amber).lerp(C.angry, (angerVis - 0.5) * 2);
-    const pulse = angerVis > 0.5 ? 1 + Math.sin(t * 14) * 0.18 : 1 + Math.sin(t * 2) * 0.06 + happy * 0.12;
+    if (eyeA < 0.5) tmp.copy(C.calm).lerp(C.amber, eyeA * 2); else tmp.copy(C.amber).lerp(C.angry, (eyeA - 0.5) * 2);
+    const pulse = eyeA > 0.5 ? 1 + Math.sin(t * 14) * 0.18 : 1 + Math.sin(t * 2) * 0.06 + happy * 0.12;
     irisMat.color.copy(tmp).multiplyScalar(0.95 * pulse);
-    eyeLight.color.copy(tmp); eyeLight.intensity = (1.2 + angerVis * 2.2) * pulse;
-    wrap.style.setProperty('--glow', `rgba(${Math.round(tmp.r * 255)},${Math.round(tmp.g * 255)},${Math.round(tmp.b * 255)},${(0.35 + angerVis * 0.3).toFixed(2)})`);
+    eyeLight.color.copy(tmp); eyeLight.intensity = (1.2 + eyeA * 2.2) * pulse;
+    wrap.style.setProperty('--glow', `rgba(${Math.round(tmp.r * 255)},${Math.round(tmp.g * 255)},${Math.round(tmp.b * 255)},${(0.35 + eyeA * 0.3).toFixed(2)})`);
 
     // сайт злиться разом із роботом: зелена палітра плавно стає червоною
     // коли щось згорнули — палітра кілька разів коротко блимає червоним
@@ -453,7 +485,7 @@ html.bot-gl main img,html.bot-gl main video{opacity:.3}`;
     }
 
     purr.forEach((r, i) => { const ph = (t * 0.9 + i / 3) % 1; r.scale.setScalar(1 + ph * 0.55); r.material.opacity = (1 - ph) * happy * 0.8; });
-    const rg = THREE.MathUtils.smoothstep(angerVis, 0.45, 0.8);
+    const rg = THREE.MathUtils.smoothstep(eyeA, 0.45, 0.8);
     rage.forEach((m, i) => {
       if (rg < 0.01) { m.visible = false; return; }
       m.visible = true; const ph = (t * 1.6 + i / 2) % 1;
