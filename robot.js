@@ -12,6 +12,48 @@
   wrap.appendChild(canvas);
   document.body.appendChild(wrap);
 
+  /* ---------- перешкоди «поганий зв'язок», коли робот злий ---------- */
+  const glStyle = document.createElement('style');
+  glStyle.textContent = `
+.bot-glitch{position:fixed;inset:0;z-index:44;pointer-events:none;opacity:0}
+.bot-glitch b{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(200,30,60,.09) 0 1px,transparent 1px 3px);mix-blend-mode:screen}
+.bot-glitch i{position:absolute;left:0;right:0;display:none;background:rgba(200,30,60,.16);mix-blend-mode:screen;box-shadow:0 0 12px rgba(200,30,60,.35)}
+html.bot-gl main{transform:translate3d(var(--glx,0px),0,0)}
+html.bot-gl main h1,html.bot-gl main h2,html.bot-gl main h3{text-shadow:3px 0 rgba(255,0,60,.85),-3px 0 rgba(0,255,255,.6)}
+html.bot-gl main img,html.bot-gl main video{opacity:.3}`;
+  document.head.appendChild(glStyle);
+  const glEl = document.createElement('div');
+  glEl.className = 'bot-glitch'; glEl.setAttribute('aria-hidden', 'true');
+  glEl.innerHTML = '<b></b><i></i><i></i>';
+  document.body.appendChild(glEl);
+  const tears = glEl.querySelectorAll('i');
+  let glUntil = 0, nextGl = 0, glOn = false, glLevel = -1;
+  function glitch(g, now) {
+    // g = 0..1, наскільки сильно злий
+    const lv = Math.round(g * 20) / 20;
+    if (lv !== glLevel) { glLevel = lv; glEl.style.opacity = (lv * 0.9).toFixed(2); }
+    const root = document.documentElement;
+    if (g < 0.3 || reduce) {
+      if (glOn) { glOn = false; root.classList.remove('bot-gl'); tears.forEach((t) => (t.style.display = 'none')); canvas.style.opacity = ''; canvas.style.transform = ''; }
+      return;
+    }
+    if (!glOn && now > nextGl) {                                  // короткий збій 60–140 мс
+      glOn = true; glUntil = now + 60 + Math.random() * 80;
+      root.classList.add('bot-gl');
+      root.style.setProperty('--glx', ((Math.random() - 0.5) * 16 * g).toFixed(1) + 'px');
+      tears.forEach((t) => {
+        if (Math.random() < 0.7) { t.style.display = 'block'; t.style.top = (Math.random() * 95) + '%'; t.style.height = (3 + Math.random() * 28) + 'px'; t.style.transform = `translateX(${(Math.random() - 0.5) * 40}px)`; }
+      });
+      canvas.style.opacity = (0.15 + Math.random() * 0.5).toFixed(2);   // робот «пропадає»
+      canvas.style.transform = `translateX(${((Math.random() - 0.5) * 14).toFixed(1)}px)`;
+    } else if (glOn && now > glUntil) {
+      glOn = false; root.classList.remove('bot-gl');
+      tears.forEach((t) => (t.style.display = 'none'));
+      canvas.style.opacity = ''; canvas.style.transform = '';
+      nextGl = now + (520 - 400 * g) + Math.random() * 300;     // чим злiший — тим частіше
+    }
+  }
+
   let renderer;
   try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); }
   catch (e) { wrap.remove(); return; }
@@ -170,6 +212,35 @@
   let agit = 0, angerVis = 0, happy = 0, flinch = 0, lastPoke = -1e9;
   canvas.addEventListener('pointerdown', () => { agit = Math.min(1.5, agit + 0.6); lastPoke = performance.now(); flinch = 1; });
 
+  // реакції на кліки: кнопки й меню — радіє й гойдається; хрестик (закрити меню) — коротка злість
+  let joy = 0, snapUntil = 0, sulkAt = -1e9;
+  const now0 = () => performance.now();
+  function isCross(el) {
+    const t = (el.textContent || '').trim(), lab = ((el.getAttribute('aria-label') || '') + ' ' + t).toLowerCase();
+    if (/закрити|close/.test(lab) || /^[×✕✖x]$/.test(t)) return true;
+    const h = el.closest('header');
+    return el.classList.contains('burger') && !!h && h.classList.contains('open');   // відкритий бургер намальований як ×
+  }
+  // забагато кліків (5 за 2 с будь-де на сторінці) — злиться, і сайт стає червоним
+  let clicks = [];
+  document.addEventListener('pointerdown', () => {
+    const now = performance.now();
+    clicks = clicks.filter((c) => now - c < 2000); clicks.push(now);
+    if (clicks.length >= 5) { agit = 1.3; angerVis = Math.max(angerVis, 0.7); flinch = 0.8; lastPoke = now; joy = 0; clicks = []; }
+  }, true);
+  document.addEventListener('click', (e) => {
+    if (now0() - lastPoke < 300) return;                         // щойно розізлився від кліків — не радіти
+    const el = e.target.closest && e.target.closest('button, a, [role="button"], summary, .btn');
+    if (!el || wrap.contains(el)) return;
+    const now = performance.now();
+    if (isCross(el)) { agit = 1.2; angerVis = Math.max(angerVis, 0.9); flinch = 0.8; lastPoke = now; snapUntil = now + 700; joy = 0; return; }
+    // згортаємо щось (портфоліо, пункт послуг, питання) — інколи йому це не подобається
+    const pf = el.closest('.pf-toggle'), sm = el.closest('summary');
+    const closing = (pf && pf.getAttribute('aria-expanded') === 'true') || (sm && sm.parentElement && sm.parentElement.open);
+    if (closing) { if (Math.random() < 0.45) { sulkAt = now; joy = 0; } return; }
+    joy = 1; happy = Math.max(happy, 0.8); agit = Math.max(0, agit - 0.4);
+  }, true);
+
   // прокрутка: швидкість і напрям
   let lastY = scrollY, scrollV = 0, lastScrollT = performance.now();
   addEventListener('scroll', () => {
@@ -201,24 +272,35 @@
     return s;
   }
   let side = 1, offY = 0, lastPick = 0;                         // 1 = праворуч, -1 = ліворуч
+  let scrolledSinceFlip = 0, wantFlip = false;
   function pickSpot(baseY, size, vw, topLimit, bottomLimit) {
     const m = vw < 600 ? 2 : 12;
     const xs = { '-1': m, '1': vw - size - m };
     let best = null;
-    for (const sd of [side, -side]) for (const dy of [0, -120, 120, -240, 240]) {
+    // прогорнули ~екран — обов'язково перелітає на інший бік і там шукає найвільніше місце
+    // щойно перелетів — тримається нового боку, поки не прогорнуть ще пів екрана
+    const lock = scrolledSinceFlip < innerHeight * 0.5;
+    for (const sd of (wantFlip ? [-side] : lock ? [side] : [side, -side])) for (const dy of [0, -120, 120, -240, 240, -360, 360]) {
       const y = THREE.MathUtils.clamp(baseY + dy, topLimit, bottomLimit);
-      const s = score(xs[sd], y, size) * 10 + Math.abs(dy) / 60 + (sd !== side ? 4 : 0) + (dy !== offY ? 1 : 0);
+      // після кожного ~екрана прокрутки його тягне перелетіти на інший бік (якщо там не набагато тісніше)
+      const sidePen = sd !== side ? (wantFlip ? -75 : 4) : 0;
+      const s = score(xs[sd], y, size) * 10 + Math.abs(dy) / 60 + sidePen + (dy !== offY ? 1 : 0);
       if (!best || s < best.s) best = { s, sd, dy };
     }
-    if (best.sd !== side) hop = 1;                              // старт перельоту
+    if (best.sd !== side) { hop = 1; scrolledSinceFlip = 0; }   // старт перельоту
     side = best.sd; offY = best.dy;
     return xs;
   }
   let xs = { '-1': 12, '1': innerWidth - 100 };
+  let lastFlipY = scrollY;
 
   const look = { x: 0, y: 0 }, pOff = { x: 0, y: 0 };
   let blinkT = 0, nextBlink = 2 + Math.random() * 3, wander = { x: 0, y: 0, until: 0 };
+  const EVENTS = ['sway', 'spin', 'hop', 'peek', 'sway', 'peek'];
+  const EV_DUR = { sway: 2600, spin: 1300, hop: 900, peek: 2200 };
+  let ev = null, nextEv = performance.now() + 5000 + Math.random() * 6000;
   const tmp = new THREE.Color();
+  let lastRgb = '', siteVis = 0, siteHold = 0;
   const clock = new THREE.Clock();
   let visible = true;
   document.addEventListener('visibilitychange', () => { visible = !document.hidden; if (visible) { clock.getDelta(); requestAnimationFrame(tick); } });
@@ -234,6 +316,9 @@
     const topLimit = 90, bottomLimit = vh - size - 110;          // між шапкою і кнопкою «Обговорити»
     const baseY = topLimit + (bottomLimit - topLimit) * (0.15 + prog * 0.85);
     // кожні 0.35 с шукає вільне місце: свій бік, інший бік, трохи вище чи нижче
+    // скільки прогорнули з останнього перельоту: ~0.9 екрана — час перелітати
+    scrolledSinceFlip += Math.abs(scrollY - lastFlipY); lastFlipY = scrollY;
+    wantFlip = scrolledSinceFlip > vh * 0.9;
     if (now - lastPick > 350) { lastPick = now; xs = pickSpot(baseY, size, vw, topLimit, bottomLimit); }
     const targetY = THREE.MathUtils.clamp(baseY + offY, topLimit, bottomLimit);
     const targetX = xs[side];
@@ -247,7 +332,26 @@
     const flyK = Math.min(1, Math.abs(targetX - posX) / Math.max(1, Math.abs(xs['1'] - xs['-1'])));
     hop = Math.max(0, hop - dt * 0.9);
     const arcY = reduce ? 0 : -Math.sin(flyK * Math.PI) * Math.min(120, vh * 0.12);
-    wrap.style.transform = `translate3d(${posX.toFixed(1)}px,${(posY + arcY).toFixed(1)}px,0)`;
+    // випадкові івенти раз на 7–16 с: погойдатись, крутнутись, підстрибнути, зазирнути в текст
+    let evX = 0, evY = 0, evRoll = 0, evYaw = 0, evPitch = 0, evLook = 0;
+    if (!reduce) {
+      if (!ev && now > nextEv && angerVis < 0.2 && flyK < 0.05) {
+        const type = EVENTS[Math.floor(Math.random() * EVENTS.length)];
+        ev = { type, t0: now, dur: EV_DUR[type], dir: Math.random() < 0.5 ? -1 : 1 };
+      }
+      if (ev) {
+        const p = (now - ev.t0) / ev.dur;
+        if (p >= 1 || angerVis > 0.5) { ev = null; nextEv = now + 7000 + Math.random() * 9000; }
+        else {
+          const env = Math.sin(p * Math.PI);
+          if (ev.type === 'sway') { evX = Math.sin(p * Math.PI * 3) * 28 * env; evRoll = -Math.sin(p * Math.PI * 3) * 0.22 * env; }
+          if (ev.type === 'spin') { const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2; evYaw = e * Math.PI * 2 * ev.dir; }
+          if (ev.type === 'hop') { evY = -Math.abs(Math.sin(p * Math.PI * 2)) * 26 * (1 - p * 0.4); evPitch = Math.sin(p * Math.PI * 2) * 0.15; }
+          if (ev.type === 'peek') evLook = Math.min(1, env * 1.6);
+        }
+      }
+    }
+    wrap.style.transform = `translate3d(${(posX + evX).toFixed(1)}px,${(posY + arcY + evY).toFixed(1)}px,0)`;
 
     // --- куди дивитись ---
     const rect = canvas.getBoundingClientRect();
@@ -261,6 +365,8 @@
       tx = THREE.MathUtils.clamp((ptr.x - cx) / (vw * 0.45), -1.2, 1.2);
       ty = THREE.MathUtils.clamp(-(ptr.y - cy) / (vh * 0.45), -1.2, 1.2);
     }
+    // івент «зазирнути»: дивиться вбік і вниз, на текст
+    if (evLook > 0) { tx = THREE.MathUtils.lerp(tx, -Math.sign(posX - vw / 2 || 1) * 1.1, evLook); ty = THREE.MathUtils.lerp(ty, -0.6, evLook); }
     // при прокрутці дивиться в бік руху
     const sv = THREE.MathUtils.clamp(scrollV / 2500, -1, 1);
     ty = THREE.MathUtils.lerp(ty, -sv, Math.min(1, Math.abs(sv) * 1.5));
@@ -268,15 +374,18 @@
 
     // --- настрій ---
     if (Math.abs(scrollV) > 6000 && !reduce) { agit = Math.min(1.5, agit + dt * 1.6); lastPoke = now; }
-    const calmRate = now - lastPoke > 1500 ? 0.5 : 0;
+    let calmRate = now - lastPoke > 700 ? 1.5 : 0;               // швидко приходить у себе
+    if (snapUntil && now > snapUntil) { calmRate = Math.max(calmRate, 4); if (agit <= 0) snapUntil = 0; }
+    joy = Math.max(0, joy - dt * 0.45);
     agit = Math.max(0, agit - dt * (calmRate + (hoverCta ? 1.2 : 0)));
     const aT = Math.min(1, agit);
-    angerVis += (aT - angerVis) * Math.min(1, dt * (aT > angerVis ? 6 : 2));
+    angerVis += (aT - angerVis) * Math.min(1, dt * (aT > angerVis ? 6 : 4));
     let nearContact = false;
     if (contact) { const r = contact.getBoundingClientRect(); nearContact = r.top < vh * 0.6 && r.bottom > vh * 0.3; }
     // у польоті дивиться туди, куди летить
     if (flyK > 0.05) { tx = THREE.MathUtils.lerp(tx, Math.sign(targetX - posX) * 1.1, Math.min(1, flyK * 3)); ty = THREE.MathUtils.lerp(ty, 0.15, flyK); }
-    happy += (((hoverCta || nearContact) && angerVis < 0.3 ? 1 : 0) - happy) * Math.min(1, dt * 2.2);
+    const wantHappy = angerVis < 0.3 ? Math.max(hoverCta || nearContact ? 1 : 0, joy > 0.15 ? 0.9 : 0) : 0;
+    happy += (wantHappy - happy) * Math.min(1, dt * (wantHappy > happy ? 2.5 : 1.2));
 
     const follow = angerVis > 0.5 ? 10 : 4.5;
     look.x += (-ty * 0.55 - look.x) * Math.min(1, dt * follow);
@@ -292,6 +401,16 @@
     head.rotation.y = look.y;
     // крен від швидкості руху по екрану
     head.rotation.z = -look.y * 0.12 + THREE.MathUtils.clamp(velY / 3000, -0.25, 0.25) - THREE.MathUtils.clamp(velX / 2500, -0.35, 0.35);
+    // радісне гойдання ~2 с після кліку
+    head.rotation.z += evRoll; head.rotation.y += evYaw; head.rotation.x += evPitch;
+    // повільно повертається навколо своєї осі туди-сюди (~±17°), щоб не стояв статично
+    root.rotation.y = reduce ? 0 : Math.sin(t * 0.42) * 0.3 * (1 - angerVis * 0.7);
+    // невдоволення, коли щось згорнули: «ні-ні» головою
+    const sulkP = (now - sulkAt) / 1100, sulk = sulkP >= 0 && sulkP < 1 ? 1 - sulkP : 0;
+    if (sulk > 0 && !reduce) head.rotation.y += Math.sin(sulkP * Math.PI * 6) * 0.28 * sulk;
+    const sway = reduce ? 0 : joy * (1 - angerVis);
+    head.rotation.z += sway * 0.16 * Math.sin(t * 5);
+    root.position.x = sway * 0.06 * Math.sin(t * 5 - 0.6);
 
     pOff.x += (tx * 0.07 - pOff.x) * Math.min(1, dt * 12);
     pOff.y += (ty * 0.07 - pOff.y) * Math.min(1, dt * 12);
@@ -312,6 +431,26 @@
     irisMat.color.copy(tmp).multiplyScalar(0.95 * pulse);
     eyeLight.color.copy(tmp); eyeLight.intensity = (1.2 + angerVis * 2.2) * pulse;
     wrap.style.setProperty('--glow', `rgba(${Math.round(tmp.r * 255)},${Math.round(tmp.g * 255)},${Math.round(tmp.b * 255)},${(0.35 + angerVis * 0.3).toFixed(2)})`);
+
+    // сайт злиться разом із роботом: зелена палітра плавно стає червоною
+    // коли щось згорнули — палітра кілька разів коротко блимає червоним
+    const flick = sulk > 0 ? (Math.floor(sulkP * 7) % 2 === 0 ? 0.85 * sulk + 0.15 : 0) : 0;
+    if (flick > 0) { irisMat.color.copy(C.calm).lerp(C.angry, flick); eyeLight.color.copy(irisMat.color); }
+    const rageTarget = Math.max(THREE.MathUtils.smoothstep(angerVis, 0.45, 0.85), flick);
+    // плавно: червоніє ~за 1.5 с, повертається до зеленого ~за 6 с
+    // на піку бордовий ще ~1.5 с тримається, потім повільно відходить
+    if (rageTarget > 0.5 && rageTarget >= siteVis - 0.05) siteHold = now + 1500;
+    if (rageTarget > siteVis || now > siteHold) siteVis += (rageTarget - siteVis) * Math.min(1, dt * (rageTarget > siteVis ? 1.4 : 0.5));
+    const siteRage = siteVis < 0.004 ? 0 : siteVis;
+    glitch(THREE.MathUtils.smoothstep(angerVis, 0.45, 0.85), now);
+    // зелений → бордовий (у тон рамки Direct)
+    const rgb = [Math.round(57 + (200 - 57) * siteRage), Math.round(255 + (30 - 255) * siteRage), Math.round(122 + (60 - 122) * siteRage)].join(',');
+    if (rgb !== lastRgb) {
+      lastRgb = rgb;
+      const st = document.documentElement.style;
+      if (siteRage < 0.01) { st.removeProperty('--g-rgb'); st.removeProperty('--green'); }
+      else { st.setProperty('--g-rgb', rgb); st.setProperty('--green', `rgb(${rgb})`); }
+    }
 
     purr.forEach((r, i) => { const ph = (t * 0.9 + i / 3) % 1; r.scale.setScalar(1 + ph * 0.55); r.material.opacity = (1 - ph) * happy * 0.8; });
     const rg = THREE.MathUtils.smoothstep(angerVis, 0.45, 0.8);
